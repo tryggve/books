@@ -30,8 +30,8 @@ function enableToggler(node) {
     const chevron = node.getElementsByTagName('svg')[0]
     const children = node.nextElementSibling
     node.addEventListener('click', () => {
-        chevron.classList.toggle(chevron.dataset.classToggle)
-        children.classList.toggle(children.dataset.classToggle)
+        chevron.toggleAttribute('data-open')
+        children.toggleAttribute('data-open')
     })
 }
 
@@ -65,7 +65,14 @@ function enableSeriesOrderEnabler(seriesOrderInput, seriesSelector, seriesOption
     })
 }
 
+function enableObserver(sentinel, toolbar) {
+    const observer = new IntersectionObserver(([e]) => { toolbar.toggleAttribute('data-stuck', !e.isIntersecting) });
+    observer.observe(sentinel);
+}
+
 function hello() {
+    const toolbar = document.querySelector('[data-component="toolbar"]');
+    const sentinel = document.querySelector('[data-component="sentinel"]');
     const bookForm = document.querySelector('#book-form');
     const bookAuthorSelector = document.querySelector('#book-author')
     const seriesSelector = document.querySelector('#book-series')
@@ -78,6 +85,7 @@ function hello() {
     document.querySelectorAll('[data-component="series-row"]').forEach(enableToggler)
     enableSeriesFilter(bookAuthorSelector, seriesSelector, seriesOptions, seriesOrderInput)
     enableSeriesOrderEnabler(seriesOrderInput, seriesSelector, seriesOptions)
+    enableObserver(sentinel, toolbar);
 }
 
 function scrollRestore() {

@@ -15,20 +15,17 @@ export type AuthorGroup = {
     series: Record<string, (BookType & { order: number })[]>
     standalone: BookType[]
 }
-
 export type BookAuthor = {
     id: number
     name: string
     sortName: string | null
 }
-
 export type BookSeries = {
     id: number
     name: string
     order: number
     primaryAuthorId: number
 }
-
 export type BookType = {
     id: number
     title: string
@@ -38,13 +35,11 @@ export type BookType = {
     read: boolean
     yearPublished: number
 }
-
 export type AuthorType = {
     id: number
     name: string
     sortName?: string | null
 }
-
 export type SeriesType = {
     id: number
     name: string
@@ -57,22 +52,34 @@ const main = css`
     max-width: 555px;
     background-color: var(--color-background-primary);
 `
-
 const ul = css`
     list-style-type: none;
 `
-
+const li = css`
+    padding-top: 20px;
+    &:last-child {
+        [data-component="author-row"]:not(:has([data-open])) {
+            border-color: transparent;
+        }
+    }
+`
 const toolBar = css`
     position: sticky;
     top: 0;
     padding: 20px 10px;
-    margin-bottom: 10px; 
     z-index:9999;
     display: flex;
     justify-content: space-between;
     background-color: var(--color-background-primary);
-`
+    transition: box-shadow .15s cubic-bezier(0.4, 0, 0.2, 1);
 
+    &[data-stuck] {
+        box-shadow: 0 3px 2px -2px rgba(0, 0, 0, .1);
+    }
+`
+const sentinel = css`
+    height: 1px;
+`
 const fadein = keyframes`
   0% {
     opacity: 0;
@@ -81,7 +88,6 @@ const fadein = keyframes`
     opacity: revert-rule;
   }
 `
-
 const dialog = css`
     position: fixed;
     top: 35%;
@@ -104,37 +110,36 @@ const dialog = css`
         opacity: 0.75;
     }
 `
-
 const dialogContainer = css`
     display: flex;
     flex-direction: column;
 `
-const spineColors = ['#AFA9EC', '#5DCAA5', '#F0997B', '#85B7EB', '#FAC775', '#97C459', '#ED93B1'];
 
-type Props = { books: AuthorGroup[], message?: string }
+const spineColorLength = 7
 
-const BookList: FC<Props> = ({ books, message }) => (
+const BookList: FC<{ books: AuthorGroup[], message?: string }> = ({ books, message }) => (
     <Layout title="Mina Böcker" script='/static/index.js'>
         <main class={main}>
+            <div class={sentinel} data-component='sentinel'></div>
             {message && <Message>{message}</Message>}
-            <div class={toolBar}>
+            <div class={toolBar} data-component='toolbar'>
                 <FilterButtons />
                 <Tools />
             </div>
-            <ul class={ul}>
+            <ul class={ul} data-component='book-list'>
                 {books.map((a, ai) => (
-                    <li key={a.name}>
+                    <li key={a.name} class={li}>
                         <AuthorBlock name={a.name} count={Object.values(a.series).reduce((acc, curr) => acc += curr.length, 0) + a.standalone.length} ai={ai}>
                             {Object.entries(a.series).map(([name, books], si) => (
                                 <SeriesBlock name={name} count={books.length}>
                                     {books.sort((a, b) => a.order - b.order).map((book) => (
-                                        <Book key={book.id} book={{...book, seriesOrder: book.order }} spineColor={spineColors[si % spineColors.length]} />
+                                        <Book key={book.id} book={{...book, seriesOrder: book.order }} spineColor={si % spineColorLength} />
                                     ))}
                                 </SeriesBlock>
                             ))}
                             <SeriesBlock name={"Fristående"} count={(a.standalone.length)}>
                                 {a.standalone.map((book, bi) => (
-                                    <Book key={book.id} book={book} spineColor={`${spineColors[bi % spineColors.length]}`} />
+                                    <Book key={book.id} book={book} spineColor={bi % spineColorLength} />
                                 ))}
                             </SeriesBlock>
                         </AuthorBlock>
