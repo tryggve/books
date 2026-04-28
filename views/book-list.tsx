@@ -95,6 +95,7 @@ const dialog = css`
     max-width: 555px;
     border: none;
     border-radius: 20px;
+    overscroll-behavior: contain;
 
     &[open] {
         animation: ${fadein} 200ms ease-in forwards;
