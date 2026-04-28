@@ -10,9 +10,8 @@ const authorRow = css`
     display: flex;
     align-items: center;
     gap: 10px;
-    padding: 0 8px 0 5px;
+    padding: 20px 8px 8px 5px;
     background-color: var(--color-background-primary);
-    padding-bottom: 8px;
     border-bottom: 1px solid var(--color-border-secondary);
     cursor: pointer;
     user-select: none;

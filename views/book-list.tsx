@@ -56,7 +56,6 @@ const ul = css`
     list-style-type: none;
 `
 const li = css`
-    padding-top: 20px;
     &:last-child {
         [data-component="author-row"]:not(:has([data-open])) {
             border-color: transparent;
