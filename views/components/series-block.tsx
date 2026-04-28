@@ -1,5 +1,6 @@
 import { css } from 'hono/css'
 import type { FC, PropsWithChildren } from 'hono/jsx'
+import { Chevron } from './chevron.tsx'
 
 const seriesBlock = css`margin-bottom: 8px; padding: 0 8px 0 16px; &:last-child { margin-bottom: 0px; }`
 const seriesRow = css`position: sticky; top: 110px; display: flex; align-items: center; background-color: var(--color-background-primary); gap: 16px; padding: 8px 0; cursor: pointer; user-select: none;`
@@ -13,7 +14,7 @@ export const SeriesBlock: FC<PropsWithChildren<{ name: string, count: number }>>
     return (
         <div class={seriesBlock}>
             <div class={seriesRow} data-component='series-row'>
-                <svg class={seriesChevron} data-open viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="5,3 9,7 5,11" /></svg>
+                <Chevron className={seriesChevron} open />
                 <span class={seriesName}>{name}</span>
                 <span class={seriesCount}>{count} {count !== 1 ? 'böcker' : 'bok'}</span>
             </div>

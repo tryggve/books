@@ -1,6 +1,8 @@
 import { css } from 'hono/css'
 import type { FC, PropsWithChildren } from 'hono/jsx'
 
+import { Chevron } from './chevron.tsx'
+
 const authorRow = css`
     position: sticky;
     z-index: 9998;
@@ -84,7 +86,7 @@ export const AuthorBlock: FC<PropsWithChildren<{name: string, count: number, ai:
                 <div class={authorAvatar} data-stuff={av}>{initials(name)}</div>
                 <span class={authorName}>{name}</span>
                 <span class={authorCount}>{count} {count !== 1 ? 'böcker' : 'bok'}</span>
-                <svg class={chevron} viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="5,3 9,7 5,11" /></svg>
+                <Chevron className={chevron} />
             </div>
             <div class={authorChildren}>
                 {children}
