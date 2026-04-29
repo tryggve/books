@@ -1,20 +1,44 @@
 import { css } from 'hono/css'
 import type { FC, PropsWithChildren } from 'hono/jsx'
 
-import { Chevron } from './chevron.tsx'
-
 const authorRow = css`
-    position: sticky;
-    z-index: 9998;
-    top: 71px;
     display: flex;
     align-items: center;
-    gap: 10px;
-    padding: 20px 8px 8px 5px;
+    justify-content: space-between;
+    position: sticky;
+    top: 73px;
+    z-index: 9998;
     background-color: var(--color-background-primary);
-    border-bottom: 1px solid var(--color-border-secondary);
     cursor: pointer;
     user-select: none;
+    padding: 20px 30px 8px 5px;
+    border-bottom: 1px solid var(--color-border-secondary);
+    &::after {
+        content: "";
+        position: absolute;
+        right: 10px;
+        display: inline-block;
+        border-right: 1px solid var(--color-text-primary);
+        border-bottom: 1px solid var(--color-text-primary);
+        width: 8px;
+        height: 8px;
+        transform: rotate(-45deg);
+        transition: transform 0.2s;
+    }
+`
+
+const authorBlock = css`
+    &[open] > ${authorRow} {
+        &::after {
+            transform: rotate(45deg);
+        }
+    }
+
+    &:last-child:not([open]) {
+        ${authorRow} {
+            border-color: transparent;
+        }
+    }
 `
 const authorAvatar = css`
     width: 30px;
@@ -57,20 +81,11 @@ const authorCount = css`
     font-size: 11px;
     color: var(--color-text-tertiary);
 `
-const authorChildren = css`
-    display: none;
-    &[data-open] {
-        display: block;
-    }
-`
 
-const chevron = css`
-    width: 14px;
-    height: 14px;
-    transition: transform 0.2s;
-    &[data-open] {
-        transform: rotate(90deg);
-    }
+const authorTitle = css`
+    display: flex;
+    align-items: center;
+    gap: 6px;
 `
 
 function initials(name: string) {
@@ -80,16 +95,15 @@ function initials(name: string) {
 export const AuthorBlock: FC<PropsWithChildren<{name: string, count: number, ai: number}>> = ({name, count, children, ai}) => {
     const av = ai % 5
     return (
-        <>
-            <div class={authorRow} data-component="author-row">
-                <div class={authorAvatar} data-stuff={av}>{initials(name)}</div>
-                <span class={authorName}>{name}</span>
+        <details class={authorBlock}>
+            <summary class={authorRow}>
+                <div class={authorTitle}>
+                    <span class={authorAvatar} data-stuff={av}>{initials(name)}</span>
+                    <span class={authorName}>{name}</span>
+                </div>
                 <span class={authorCount}>{count} {count !== 1 ? 'böcker' : 'bok'}</span>
-                <Chevron className={chevron} />
-            </div>
-            <div class={authorChildren}>
-                {children}
-            </div>
-        </>
+            </summary>
+            {children}
+        </details>
     )
 } 

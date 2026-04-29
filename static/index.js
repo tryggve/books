@@ -26,15 +26,6 @@ function enableClicker(node) {
     })
 }
 
-function enableToggler(node) {
-    const chevron = node.getElementsByTagName('svg')[0]
-    const children = node.nextElementSibling
-    node.addEventListener('click', () => {
-        chevron.toggleAttribute('data-open')
-        children.toggleAttribute('data-open')
-    })
-}
-
 function filterBooks() {
     const bookNodes = document.querySelectorAll('[data-component="book-row"]')
     bookNodes.forEach(book => {
@@ -81,8 +72,6 @@ function hello() {
 
     bookForm.addEventListener('submit', () => sessionStorage.setItem('scrollY', window.scrollY))
     document.querySelectorAll('#owned-status, #read-status').forEach(enableClicker)
-    document.querySelectorAll('[data-component="author-row"]').forEach(enableToggler)
-    document.querySelectorAll('[data-component="series-row"]').forEach(enableToggler)
     enableSeriesFilter(bookAuthorSelector, seriesSelector, seriesOptions, seriesOrderInput)
     enableSeriesOrderEnabler(seriesOrderInput, seriesSelector, seriesOptions)
     enableObserver(sentinel, toolbar);

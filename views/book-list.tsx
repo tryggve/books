@@ -52,16 +52,6 @@ const main = css`
     max-width: 555px;
     background-color: var(--color-background-primary);
 `
-const ul = css`
-    list-style-type: none;
-`
-const li = css`
-    &:last-child {
-        [data-component="author-row"]:not(:has([data-open])) {
-            border-color: transparent;
-        }
-    }
-`
 const toolBar = css`
     position: sticky;
     top: 0;
@@ -77,7 +67,7 @@ const toolBar = css`
     }
 `
 const sentinel = css`
-    height: 1px;
+    height: 0px;
 `
 const fadein = keyframes`
   0% {
@@ -126,26 +116,24 @@ const BookList: FC<{ books: AuthorGroup[], message?: string }> = ({ books, messa
                 <FilterButtons />
                 <Tools />
             </div>
-            <ul class={ul} data-component='book-list'>
+            <div data-component='book-list'>
                 {books.map((a, ai) => (
-                    <li key={a.name} class={li}>
-                        <AuthorBlock name={a.name} count={Object.values(a.series).reduce((acc, curr) => acc += curr.length, 0) + a.standalone.length} ai={ai}>
-                            {Object.entries(a.series).map(([name, books], si) => (
-                                <SeriesBlock name={name} count={books.length}>
-                                    {books.sort((a, b) => a.order - b.order).map((book) => (
-                                        <Book key={book.id} book={{...book, seriesOrder: book.order }} spineColor={si % spineColorLength} />
-                                    ))}
-                                </SeriesBlock>
-                            ))}
-                            <SeriesBlock name={"Fristående"} count={(a.standalone.length)}>
-                                {a.standalone.map((book, bi) => (
-                                    <Book key={book.id} book={book} spineColor={bi % spineColorLength} />
+                    <AuthorBlock key={a.name} name={a.name} count={Object.values(a.series).reduce((acc, curr) => acc += curr.length, 0) + a.standalone.length} ai={ai}>
+                        {Object.entries(a.series).map(([name, books], si) => (
+                            <SeriesBlock name={name} count={books.length}>
+                                {books.sort((a, b) => a.order - b.order).map((book) => (
+                                    <Book key={book.id} book={{...book, seriesOrder: book.order }} spineColor={si % spineColorLength} />
                                 ))}
                             </SeriesBlock>
-                        </AuthorBlock>
-                    </li>
+                        ))}
+                        <SeriesBlock name={"Fristående"} count={(a.standalone.length)}>
+                            {a.standalone.map((book, bi) => (
+                                <Book key={book.id} book={book} spineColor={bi % spineColorLength} />
+                            ))}
+                        </SeriesBlock>
+                    </AuthorBlock>
                 ))}
-            </ul>
+            </div>
             <dialog id="add-form" class={dialog}>
                 <div class={dialogContainer}>
                     <BookForm closeButton={<CloseButton commandfor="add-form" />}/>
