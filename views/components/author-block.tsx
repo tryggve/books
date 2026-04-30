@@ -5,23 +5,25 @@ const authorRow = css`
     display: flex;
     align-items: center;
     justify-content: space-between;
+    gap: 10px;
     position: sticky;
     top: 73px;
     z-index: 9998;
     background-color: var(--color-background-primary);
     cursor: pointer;
     user-select: none;
-    padding: 20px 30px 8px 5px;
+    padding: 20px 32px 8px 5px;
     border-bottom: 1px solid var(--color-border-secondary);
     &::after {
         content: "";
         position: absolute;
-        right: 10px;
+        right: 13px;
         display: inline-block;
-        border-right: 1px solid var(--color-text-primary);
-        border-bottom: 1px solid var(--color-text-primary);
-        width: 8px;
-        height: 8px;
+        border-right: 1.5px solid var(--color-text-primary);
+        border-bottom: 1.5px solid var(--color-text-primary);
+        border-radius: 1px;
+        width: 5.5px;
+        height: 5.5px;
         transform: rotate(-45deg);
         transition: transform 0.2s;
     }
@@ -82,12 +84,6 @@ const authorCount = css`
     color: var(--color-text-tertiary);
 `
 
-const authorTitle = css`
-    display: flex;
-    align-items: center;
-    gap: 6px;
-`
-
 function initials(name: string) {
     return name.split(',')[0].split(' ').map(p => p[0]).join('').slice(0, 2).toUpperCase();
 }
@@ -97,10 +93,8 @@ export const AuthorBlock: FC<PropsWithChildren<{name: string, count: number, ai:
     return (
         <details class={authorBlock}>
             <summary class={authorRow}>
-                <div class={authorTitle}>
-                    <span class={authorAvatar} data-stuff={av}>{initials(name)}</span>
-                    <span class={authorName}>{name}</span>
-                </div>
+                <span class={authorAvatar} data-stuff={av}>{initials(name)}</span>
+                <span class={authorName}>{name}</span>
                 <span class={authorCount}>{count} {count !== 1 ? 'böcker' : 'bok'}</span>
             </summary>
             {children}

@@ -29,7 +29,7 @@ const bookRowStyle = css`
     display: flex;
     align-items: center;
     gap: 20px;
-    padding: 10px 5px 10px 16px;
+    padding: 10px 8px 10px 20px;
     border-bottom: 0.5px solid var(--color-border-tertiary);
     &:last-child {
         border-bottom: none;

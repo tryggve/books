@@ -8,25 +8,25 @@ const seriesRow = css`
     top: 132px;
     background-color: var(--color-background-primary);
     gap: 16px;
-    padding: 8px 28px;
+    padding: 8px 8px 8px 44px;
     cursor: pointer;
     user-select: none;
     &::before {
         content: "";
         position: absolute;
-        left: 16px;
+        left: 19px;
         display: inline-block;
-        border-right: 1px solid var(--color-text-tertiary);
-        border-bottom: 1px solid var(--color-text-tertiary);
-        width: 4px;
-        height: 4px;
+        border-right: 1.5px solid var(--color-text-tertiary);
+        border-bottom: 1.5px solid var(--color-text-tertiary);
+        border-radius: 1px;
+        width: 4.5px;
+        height: 4.5px;
         transform: rotate(-45deg);
         transition: transform 0.2s;
     }
 `
 const seriesBlock = css`
     margin-bottom: 8px;
-//    padding: 0 8px 0 16px;
     &:last-child {
         margin-bottom: 0px;
     }
@@ -39,8 +39,6 @@ const seriesBlock = css`
 `
 const seriesName = css`font-size: 13px; font-weight: 500; color: var(--color-text-secondary); flex: 1;`
 const seriesCount = css`font-size: 11px; color: var(--color-text-tertiary);`
-const seriesChevron = css`width: 12px; height: 12px; transition: transform 0.2s; color: var(--color-text-tertiary); &[data-open] { transform: rotate(90deg); }`
-const seriesChildren = css`display: none; &[data-open] { display: block; }`
 
 export const SeriesBlock: FC<PropsWithChildren<{ name: string, count: number }>> = ({ name, count, children }) => {
     if (count === 0) return null
