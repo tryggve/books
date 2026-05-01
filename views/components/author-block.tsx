@@ -50,23 +50,23 @@ const authorAvatar = css`
     font-size: 11px;
     font-weight: 500;
     flex-shrink: 0;
-    &[data-stuff='0'] {
+    &[data-av='0'] {
         background-color: #eeedfe;
         color: #3c3489;
     }
-    &[data-stuff='1'] {
+    &[data-av='1'] {
         background-color: #e1f5ee;
         color: #085041;
     }
-    &[data-stuff='2'] {
+    &[data-av='2'] {
         background-color: #faece7;
         color: #712b13;
     }
-    &[data-stuff='3'] {
+    &[data-av='3'] {
         background-color: #e6f1fb;
         color: #0c447c;
     }
-    &[data-stuff='4'] {
+    &[data-av='4'] {
         background-color: #faeeda;
         color: #633806;
     }
@@ -91,7 +91,7 @@ export const AuthorBlock: FC<PropsWithChildren<{name: string, count: number, ai:
     return (
         <details class={authorBlock}>
             <summary class={authorRow}>
-                <span class={authorAvatar} data-stuff={av}>{initials(name)}</span>
+                <span class={authorAvatar} data-av={av}>{initials(name)}</span>
                 <span class={authorName}>{name}</span>
                 <span class={authorCount}>{count} {count !== 1 ? 'böcker' : 'bok'}</span>
             </summary>
