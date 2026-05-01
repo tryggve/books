@@ -94,11 +94,12 @@ html {
 }
 `
 
-
-
 const body = css`
     background-color: papayawhip;
     font: 1.2rem var(--font-sans);
+    &:has(dialog:open) {
+        overflow: hidden;
+    }
 `
 
 const Layout: FC<Props> = ({ title, script, children, bodyStyle }) => {
