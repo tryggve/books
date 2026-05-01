@@ -14,14 +14,13 @@ const seriesRow = css`
     &::before {
         content: "";
         position: absolute;
-        left: 19px;
+        left: 16px;
         display: inline-block;
-        border-right: 1.5px solid var(--color-text-tertiary);
-        border-bottom: 1.5px solid var(--color-text-tertiary);
-        border-radius: 1px;
-        width: 4.5px;
-        height: 4.5px;
-        transform: rotate(-45deg);
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12' fill='none' stroke='currentColor' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='5,3 9,7 5,11' /%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        width: 14px;
+        height: 14px;
+        transform: rotate(0deg);
         transition: transform 0.2s;
     }
 `
@@ -33,7 +32,7 @@ const seriesBlock = css`
 
     &[open] > ${seriesRow} {
         &::before {
-            transform: rotate(45deg);
+            transform: rotate(90deg);
         }
     }
 `

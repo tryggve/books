@@ -17,14 +17,12 @@ const authorRow = css`
     &::after {
         content: "";
         position: absolute;
-        right: 13px;
+        right: 8px;
         display: inline-block;
-        border-right: 1.5px solid var(--color-text-primary);
-        border-bottom: 1.5px solid var(--color-text-primary);
-        border-radius: 1px;
-        width: 5.5px;
-        height: 5.5px;
-        transform: rotate(-45deg);
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 14' fill='none' stroke='currentColor' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='5,3 9,7 5,11' /%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        width: 14px;
+        height: 14px;
         transition: transform 0.2s;
     }
 `
@@ -32,7 +30,7 @@ const authorRow = css`
 const authorBlock = css`
     &[open] > ${authorRow} {
         &::after {
-            transform: rotate(45deg);
+            transform: rotate(90deg);
         }
     }
 
