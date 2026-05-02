@@ -89,6 +89,19 @@ function enableSwitcharoo(button, input, selector) {
     })
 }
 
+function killTheMessenger(message) {
+    if (!message) return;
+    window.setTimeout(() => {
+        message.classList.add('show')
+    })
+    window.setTimeout(() => {
+        message.classList.add('hide')
+    }, 2000)
+    window.setTimeout(() => {
+        message.remove()
+    }, 3000)
+}
+
 function hello() {
     const toolbar = document.querySelector('[data-component="toolbar"]')
     const sentinel = document.querySelector('[data-component="sentinel"]')
@@ -101,6 +114,7 @@ function hello() {
     const newSeriesInput = document.querySelector('#new-series-input')
     const newAuthorButton = document.querySelector('#new-author-button')
     const newSeriesButton = document.querySelector('#new-series-button')
+    const message = document.querySelector('#message')
 
     bookForm.addEventListener('submit', () => sessionStorage.setItem('scrollY', window.scrollY))
     document.querySelectorAll('#owned-status, #read-status').forEach(enableClicker)
@@ -109,6 +123,7 @@ function hello() {
     enableObserver(sentinel, toolbar);
     enableSwitcharoo(newAuthorButton, newAuthorInput, bookAuthorSelector)
     enableSwitcharoo(newSeriesButton, newSeriesInput, seriesSelector)
+    killTheMessenger(message)
 }
 
 function scrollRestore() {
