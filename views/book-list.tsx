@@ -118,15 +118,15 @@ const BookList: FC<{ books: AuthorGroup[], message?: string }> = ({ books, messa
         </div>
         <div data-component='book-list'>
             {books.map((a, ai) => (
-                <AuthorBlock key={a.name} name={a.name} count={Object.values(a.series).reduce((acc, curr) => acc += curr.length, 0) + a.standalone.length} ai={ai}>
+                <AuthorBlock key={a.name} authorId={a.id} name={a.name} count={Object.values(a.series).reduce((acc, curr) => acc += curr.length, 0) + a.standalone.length} ai={ai}>
                     {Object.entries(a.series).map(([name, books], si) => (
-                        <SeriesBlock name={name} count={books.length}>
+                        <SeriesBlock name={name} count={books.length} seriesId={`${a.id}-${books[0].series[0].id}`}>
                             {books.sort((a, b) => a.order - b.order).map((book) => (
                                 <Book key={book.id} book={{...book, seriesOrder: book.order }} spineColor={si % spineColorLength} />
                             ))}
                         </SeriesBlock>
                     ))}
-                    <SeriesBlock name={"Fristående"} count={(a.standalone.length)}>
+                    <SeriesBlock name={"Fristående"} count={(a.standalone.length)} seriesId={`${a.id}-standalone`}>
                         {a.standalone.map((book, bi) => (
                             <Book key={book.id} book={book} spineColor={bi % spineColorLength} />
                         ))}

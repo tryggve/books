@@ -39,10 +39,10 @@ const seriesBlock = css`
 const seriesName = css`font-size: 13px; font-weight: 500; color: var(--color-text-secondary); flex: 1;`
 const seriesCount = css`font-size: 11px; color: var(--color-text-tertiary);`
 
-export const SeriesBlock: FC<PropsWithChildren<{ name: string, count: number }>> = ({ name, count, children }) => {
+export const SeriesBlock: FC<PropsWithChildren<{ name: string, count: number, seriesId: string }>> = ({ name, count, children, seriesId }) => {
     if (count === 0) return null
     return (
-        <details class={seriesBlock} open>
+        <details class={seriesBlock} open data-component='series-block' data-series-id={seriesId}>
             <summary class={seriesRow} data-component='series-row'>
                 <span class={seriesName}>{name}</span>
                 <span class={seriesCount}>{count} {count !== 1 ? 'böcker' : 'bok'}</span>

@@ -86,10 +86,10 @@ function initials(name: string) {
     return name.split(',')[0].split(' ').map(p => p[0]).join('').slice(0, 2).toUpperCase();
 }
 
-export const AuthorBlock: FC<PropsWithChildren<{name: string, count: number, ai: number}>> = ({name, count, children, ai}) => {
+export const AuthorBlock: FC<PropsWithChildren<{authorId: number, name: string, count: number, ai: number}>> = ({authorId, name, count, children, ai}) => {
     const av = ai % 5
     return (
-        <details class={authorBlock}>
+        <details class={authorBlock} data-component='author-block' data-author-id={authorId}>
             <summary class={authorRow}>
                 <span class={authorAvatar} data-av={av}>{initials(name)}</span>
                 <span class={authorName}>{name}</span>
