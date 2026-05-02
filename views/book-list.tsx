@@ -82,6 +82,7 @@ const dialog = css`
     top: 35%;
     transform: translateY(-35%);
     margin: 0 auto;
+    width: 100%;
     max-width: 555px;
     border: none;
     border-radius: 20px;

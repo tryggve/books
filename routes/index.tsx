@@ -11,7 +11,18 @@ import { getFlash, setFlash, type MessageFlash } from '../lib/flash.ts'
 
 const NewBookRequestSchema = z.object({
     title: z.string(),
-    author: z.coerce.number().int(),
+    author: z.preprocess(
+        (val) => (val === "" || val === "null" ? null : val),
+        z.coerce.number().int().nullable()
+    ),
+    newAuthor: z.preprocess(
+        (val) => (val === "" || val === "null" ? null : val),
+        z.string().nullable()
+    ),
+    newSeries: z.preprocess(
+        (val) => (val === "" || val === "null" ? null : val),
+        z.string().nullable()
+    ),
     series: z.preprocess(
         (val) => (val === "" || val === "null" ? null : val),
         z.coerce.number().int().nullable()
@@ -104,6 +115,7 @@ index.post('/books',
             setFlash<MessageFlash>(c, { message: 'Någonting gick fel' })
             return c.redirect('/')
         }
+
         const { userId } = c.get('user')
         await c.get('books').insertNewBookForUser(userId, data)
 

@@ -29,6 +29,11 @@ interface BookSeries {
     primary_author_id: number
 }
 
+interface BookAuthor {
+    author_id: number
+    book_id: number
+}
+
 interface UserBooks {
     book_id: number
     owned: boolean
@@ -184,7 +189,7 @@ ORDER BY
         const client = await db.connect()
         try {
             await client.query('BEGIN')
-            const bookRes = await client.query(
+            const bookRes = await client.query<Book>(
                 `INSERT INTO books (title, year_published)
                  VALUES ($1, $2)
                  RETURNING id`,
@@ -193,9 +198,23 @@ ORDER BY
 
             const bookId = bookRes.rows[0].id
 
-            await client.query(`INSERT INTO book_authors (book_id, author_id) VALUES ($1, $2)`, [bookId, newBookStuff.author])
-            if (newBookStuff.series) await client.query(`INSERT INTO book_series (book_id, series_id, series_order) VALUES ($1, $2, $3)`, [bookId, newBookStuff.series, newBookStuff.order])
-            await client.query(`INSERT INTO user_books (user_id, book_id, owned, read) VALUES ($1, $2, $3, $4)`, [userId, bookId, newBookStuff.owned, newBookStuff.read])
+            if (newBookStuff.newAuthor) {
+                const authorRes = await client.query<Author>('INSERT INTO authors (name) VALUES ($1)', [newBookStuff.newAuthor])
+                newBookStuff.author = authorRes.rows[0].id
+            }
+
+            await client.query<BookAuthor>(`INSERT INTO book_authors (book_id, author_id) VALUES ($1, $2)`, [bookId, newBookStuff.author])
+
+            if (newBookStuff.newSeries) {
+                const seriesRes = await client.query<Series>('INSERT INTO series (name, primary_author_id) VALUES ($1,$2)', [newBookStuff.newSeries, newBookStuff.author])
+                newBookStuff.series = seriesRes.rows[0].id
+            }
+
+            if (newBookStuff.series) {
+                await client.query<BookSeries>(`INSERT INTO book_series (book_id, series_id, series_order) VALUES ($1, $2, $3)`, [bookId, newBookStuff.series, newBookStuff.order])
+            }
+
+            await client.query<UserBooks>(`INSERT INTO user_books (user_id, book_id, owned, read) VALUES ($1, $2, $3, $4)`, [userId, bookId, newBookStuff.owned, newBookStuff.read])
 
             await client.query('COMMIT')
         } catch (e) {
