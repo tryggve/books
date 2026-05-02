@@ -1,5 +1,5 @@
 const labelMaker = {
-    owned: ['Ägarskap', 'Äger', 'Äger inte'],
+    owned: ['Har | Saknar', 'Har', 'Saknar'],
     read: ['Läst | Oläst', 'Läst', 'Inte läst']
 }
 

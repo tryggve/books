@@ -10,7 +10,7 @@ const FilterButtons: FC = () => {
     return (
         <div id='filter_buttons' class={bar}>
             <button id='read-status' data-state="all" class={btn} data-class-active={readStatusBtnActive}>Läst | Oläst</button>
-            <button id='owned-status' data-state="all" class={btn} data-class-active={btnActive}>Ägarskap</button>
+            <button id='owned-status' data-state="all" class={btn} data-class-active={btnActive}>Har | Saknar</button>
         </div>
     )
 }
