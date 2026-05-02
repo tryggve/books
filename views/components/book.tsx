@@ -1,5 +1,6 @@
 import type { FC } from "hono/jsx";
 import { css } from "hono/css";
+import { EditBookForm } from "./book-form.tsx";
 
 const badgeStyle = css`
     font-size: 11px;
@@ -26,6 +27,15 @@ const badgesContainerStyle = css`
     flex-shrink: 0;
 `
 const bookRowStyle = css`
+    appearance: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font: inherit;
+    color: inherit;
+    text-align: left;
+    width: 100%;
+
     display: flex;
     align-items: center;
     gap: 20px;
@@ -84,6 +94,26 @@ const bookNumberStyle = css`
     color: var(--color-text-tertiary);
 `
 
+const popover = css`
+    border: 2px solid var(--color-border-secondary);
+    border-radius: 8px;
+    background-color: var(--color-background-primary);
+    padding: 20px;
+    position-area: block-start;
+    position-try-fallbacks: block-end;
+    display: none;
+    opacity: 0;
+    transition: opacity 300ms, display 300ms allow-discrete, overlay 300ms allow-discrete;
+    &:popover-open {
+        display: block;
+        opacity: 1;
+
+        @starting-style {
+            opacity: 0;
+        }
+    }
+`
+
 export type SingleBookType = {
     id: number
     title: string
@@ -104,8 +134,10 @@ const Book: FC<{ book: SingleBookType, spineColor: number }> = ({book, spineColo
         ? <div class={bookNumberStyle}>Del {book.seriesOrder}</div>
         : null
 
+    const popoverId = `book-${book.id}`
     return (
-        <div class={bookRowStyle} data-component="book-row" data-read={book.read} data-owned={book.owned}>
+        <>
+        <button popovertarget={popoverId} class={bookRowStyle} data-component="book-row" data-read={book.read} data-owned={book.owned} style={`anchor-name: --anchor_${popoverId};`}>
             <div class={bookSpineStyle} data-spine-color={spineColor}></div>
             <div class={bookInfoStyle}>
                 <div class={bookTitleStyle}>{book.title}</div>
@@ -113,7 +145,11 @@ const Book: FC<{ book: SingleBookType, spineColor: number }> = ({book, spineColo
                 {numLabel}
             </div>
             <div class={badgesContainerStyle}>{readBadge}{ownedBadge}</div>
+        </button>
+        <div popover={'auto'} id={popoverId} class={popover} style={`position-anchor: --anchor_${popoverId}`}>
+            <EditBookForm book={book} />
         </div>
+        </>
     )
 }
 

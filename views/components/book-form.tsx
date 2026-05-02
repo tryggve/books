@@ -3,6 +3,7 @@ import type { FC, PropsWithChildren } from "hono/jsx"
 import { css } from "hono/css"
 
 import { RepoContext } from '../../routes/index.tsx'
+import { SingleBookType } from './book.tsx'
 
 const container = css`padding: 20px; width: 100%; min-height: 400px;`
 const header = css`display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;`
@@ -86,6 +87,15 @@ const submitButton = css`
     flex: 1;
 `
 
+const h5 = css`
+    margin-bottom: 3px;
+    font-weight: normal;
+`
+const editFormSubmitWrapper = css`
+    ${formSubmitWrapper};
+    margin-top: 10px;
+`
+
 const BookForm: FC<PropsWithChildren<{closeButton: any}>> = ({closeButton}) => {
     const { authors, series } = useContext(RepoContext)
 
@@ -148,5 +158,26 @@ const BookForm: FC<PropsWithChildren<{closeButton: any}>> = ({closeButton}) => {
         </div>
     )
 }
+
+
+export const EditBookForm: FC<{book: SingleBookType}> = ({book}) => {
+    return (
+        <form method={'post'} action={`/book/${book.id}`} data-component={'edit-book-form'}>
+            <h5 class={h5}>{book.title}</h5>
+            <div class={checkboxWrapper}>
+                <label class={checkboxLabel}>
+                    <input type="checkbox" name="read" id="read-check" class={checkbox} value="true" checked={book.read} /> Läst
+                </label>
+                <label class={checkboxLabel}>
+                    <input type="checkbox" name="owned" id="owned-check" class={checkbox} value="true" checked={book.owned} /> Äger
+                </label>
+            </div>
+            <div class={editFormSubmitWrapper}>
+                <button type="submit" class={submitButton}>Spara</button>
+            </div>
+        </form>
+    )
+}
+
 
 export default BookForm
