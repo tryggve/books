@@ -1,10 +1,12 @@
 import { Hono } from 'hono'
 import { setCookie } from 'hono/cookie'
+import { css } from 'hono/css'
 import { safeParse, z } from 'zod'
 
 import { verifyPassword } from '../lib/password.ts'
 import { setFlash, getFlash, type LoginErrorFlash } from '../lib/flash.ts'
 
+import Layout from '../views/layout.tsx'
 import Login from '../views/login.tsx'
 
 import type { Env } from '../types.ts'
@@ -14,11 +16,23 @@ const LoginRequestSchema = z.object({
     password: z.string().min(1)
 })
 
+const body = css`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    line-height: 1.6;
+`
+
 const login = new Hono<Env>()
 
 login.get('/', (c) => {
     const { error, username } = getFlash<LoginErrorFlash>(c)
-    return c.html(<Login error={error} username={username}/>)
+    return c.html(
+        <Layout title="Login" bodyStyle={body}>
+            <Login error={error} username={username}/>
+        </Layout>
+    )
 })
 
 login.post('/', async (c) => {

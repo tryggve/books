@@ -5,6 +5,7 @@ import { safeParse, z } from 'zod'
 import type { Env } from '../types.ts'
 import { requireAuth } from '../middlewares/auth.ts'
 
+import Layout from '../views/layout.tsx'
 import BookList from '../views/book-list.tsx'
 import type { AuthorGroup, AuthorType, BookType, SeriesType } from '../views/book-list.tsx'
 import { getFlash, setFlash, type MessageFlash } from '../lib/flash.ts'
@@ -97,11 +98,11 @@ index.get('/', requireAuth, async (c) => {
     } as SeriesType))
 
     return c.html(
-        <>
+        <Layout title="Mina Böcker" script='/static/index.js'>
             <RepoContext value={{authors, books, series }}>
                 <BookList books={groupByAuthor(books)} message={message} />
             </RepoContext>
-        </>
+        </Layout>
     )
 })
 

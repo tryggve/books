@@ -1,6 +1,5 @@
 import type { FC } from 'hono/jsx'
 import { css, keyframes } from 'hono/css'
-import Layout from './layout.tsx'
 import FilterButtons from './components/filter-buttons.tsx'
 import { Tools } from './components/tools.tsx'
 import Book from './components/book.tsx'
@@ -109,39 +108,37 @@ const dialogContainer = css`
 const spineColorLength = 7
 
 const BookList: FC<{ books: AuthorGroup[], message?: string }> = ({ books, message }) => (
-    <Layout title="Mina Böcker" script='/static/index.js'>
-        <main class={main}>
-            <div class={sentinel} data-component='sentinel'></div>
-            {message && <Message>{message}</Message>}
-            <div class={toolBar} data-component='toolbar'>
-                <FilterButtons />
-                <Tools />
-            </div>
-            <div data-component='book-list'>
-                {books.map((a, ai) => (
-                    <AuthorBlock key={a.name} name={a.name} count={Object.values(a.series).reduce((acc, curr) => acc += curr.length, 0) + a.standalone.length} ai={ai}>
-                        {Object.entries(a.series).map(([name, books], si) => (
-                            <SeriesBlock name={name} count={books.length}>
-                                {books.sort((a, b) => a.order - b.order).map((book) => (
-                                    <Book key={book.id} book={{...book, seriesOrder: book.order }} spineColor={si % spineColorLength} />
-                                ))}
-                            </SeriesBlock>
-                        ))}
-                        <SeriesBlock name={"Fristående"} count={(a.standalone.length)}>
-                            {a.standalone.map((book, bi) => (
-                                <Book key={book.id} book={book} spineColor={bi % spineColorLength} />
+    <main class={main}>
+        { message && <Message>{message}</Message> }
+        <div class={sentinel} data-component='sentinel'></div>
+        <div class={toolBar} data-component='toolbar'>
+            <FilterButtons />
+            <Tools />
+        </div>
+        <div data-component='book-list'>
+            {books.map((a, ai) => (
+                <AuthorBlock key={a.name} name={a.name} count={Object.values(a.series).reduce((acc, curr) => acc += curr.length, 0) + a.standalone.length} ai={ai}>
+                    {Object.entries(a.series).map(([name, books], si) => (
+                        <SeriesBlock name={name} count={books.length}>
+                            {books.sort((a, b) => a.order - b.order).map((book) => (
+                                <Book key={book.id} book={{...book, seriesOrder: book.order }} spineColor={si % spineColorLength} />
                             ))}
                         </SeriesBlock>
-                    </AuthorBlock>
-                ))}
+                    ))}
+                    <SeriesBlock name={"Fristående"} count={(a.standalone.length)}>
+                        {a.standalone.map((book, bi) => (
+                            <Book key={book.id} book={book} spineColor={bi % spineColorLength} />
+                        ))}
+                    </SeriesBlock>
+                </AuthorBlock>
+            ))}
+        </div>
+        <dialog id="add-form" class={dialog}>
+            <div class={dialogContainer}>
+                <BookForm closeButton={<CloseButton commandfor="add-form" />}/>
             </div>
-            <dialog id="add-form" class={dialog}>
-                <div class={dialogContainer}>
-                    <BookForm closeButton={<CloseButton commandfor="add-form" />}/>
-                </div>
-            </dialog>
-        </main>
-    </Layout>
+        </dialog>
+    </main>
 )
 
 export default BookList

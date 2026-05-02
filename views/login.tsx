@@ -1,16 +1,8 @@
 import type { FC } from 'hono/jsx'
 import { css } from 'hono/css'
-import Layout from './layout.tsx'
 
 type Props = { error?: string, username?: string }
 
-const body = css`
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-    line-height: 1.6;
-`
 const container = css`width: 100%; max-width: 420px;`
 const focusBorder = css`
     position: absolute;
@@ -99,7 +91,6 @@ const errorMessage = css`
 `
 
 const Login: FC<Props> = ({ error, username }) => (
-    <Layout title="Login" bodyStyle={body}>
         <div class={container}>
             <form class="login-form" method="post" action="/login">
                 {error && <p class={errorMessage}>{error}</p>}
@@ -116,7 +107,6 @@ const Login: FC<Props> = ({ error, username }) => (
                 <button type="submit" class={loginBtn}>Sign In</button>
             </form>
         </div>
-    </Layout>
 )
 
 export default Login
