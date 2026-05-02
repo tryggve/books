@@ -105,7 +105,12 @@ function killTheMessenger(message) {
 function hello() {
     const toolbar = document.querySelector('[data-component="toolbar"]')
     const sentinel = document.querySelector('[data-component="sentinel"]')
+
+    const authorNodes = document.querySelectorAll('[data-component="author-block"]')
+    const seriesNodes = document.querySelectorAll('[data-component="series-block"]')
+
     const bookForm = document.querySelector('#book-form')
+    const editBookForm = document.querySelectorAll('[data-component="edit-book-form"]')
     const bookAuthorSelector = document.querySelector('#book-author')
     const seriesSelector = document.querySelector('#book-series')
     const seriesOrderInput = document.querySelector('#series-order')
@@ -116,7 +121,8 @@ function hello() {
     const newSeriesButton = document.querySelector('#new-series-button')
     const message = document.querySelector('#message')
 
-    bookForm.addEventListener('submit', () => sessionStorage.setItem('scrollY', window.scrollY))
+    bookForm.addEventListener('submit', () => setPageState(authorNodes, seriesNodes))
+    editBookForm.forEach(node => node.addEventListener('submit', () => setPageState(authorNodes, seriesNodes)))
     document.querySelectorAll('#owned-status, #read-status').forEach(enableClicker)
     enableSeriesFilter(newSeriesInput, bookAuthorSelector, seriesSelector, seriesOptions, seriesOrderInput)
     enableSeriesOrderEnabler(seriesOrderInput, newSeriesInput, seriesSelector, seriesOptions)
@@ -126,13 +132,37 @@ function hello() {
     killTheMessenger(message)
 }
 
-function scrollRestore() {
-    const scrollY = sessionStorage.getItem('scrollY')
-    if (scrollY) {
-        window.scrollTo({ top: parseInt(scrollY), behavior: 'instant' })
-        sessionStorage.removeItem('scrollY')
-    }
+function setPageState(authorNodes, seriesNodes) {
+    const openAuthors = [...authorNodes].filter(n => n.open).map(n => n.dataset.authorId)
+    const notOpenSeries = [...seriesNodes].filter(n => !n.open).map(n => n.dataset.seriesId)
+    sessionStorage.setItem('pageState', JSON.stringify({
+        openAuthors,
+        notOpenSeries,
+        scrollY: window.scrollY,
+    }))
 }
 
-window.addEventListener('DOMContentLoaded', scrollRestore)
+function restorePageState() {
+    const state = sessionStorage.getItem('pageState')
+    if (!state) return;
+
+    const { openAuthors, notOpenSeries, scrollY } = JSON.parse(state)
+
+    openAuthors.forEach(id => {
+        const el = document.querySelector(`[data-component="author-block"][data-author-id="${id}"]`)
+        if (el) el.open = true
+    })
+    notOpenSeries.forEach(id => {
+        const el = document.querySelector(`[data-component="series-block"][data-series-id="${id}"]`)
+        if (el) el.removeAttribute('open')
+    })
+
+    if (scrollY) {
+        window.scrollTo({ top: parseInt(scrollY), behavior: 'instant' })
+    }
+
+    sessionStorage.removeItem('pageState')
+}
+
+window.addEventListener('DOMContentLoaded', restorePageState)
 window.addEventListener('DOMContentLoaded', hello)
