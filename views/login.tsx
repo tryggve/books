@@ -91,22 +91,22 @@ const errorMessage = css`
 `
 
 const Login: FC<Props> = ({ error, username }) => (
-        <div class={container}>
-            <form class="login-form" method="post" action="/login">
-                {error && <p class={errorMessage}>{error}</p>}
-                <div class={wrapper}>
-                    <input type="text" id="username" name="username" value={username} placeholder="Username" required autocomplete="username" />
-                    <label for="username">Username</label>
-                    <span class={focusBorder}></span>
-                </div>
-                <div class={wrapper}>
-                    <input type="password" id="password" name="password" placeholder="Password" required autocomplete="current-password" />
-                    <label for="password">Password</label>
-                    <span class={focusBorder}></span>
-                </div>
-                <button type="submit" class={loginBtn}>Sign In</button>
-            </form>
-        </div>
+    <div class={container}>
+        <form class="login-form" method="post" action="/login">
+            {error && <p class={errorMessage}>{error}</p>}
+            <div class={wrapper}>
+                <input type="text" id="username" name="username" value={username} placeholder="Username" required autocomplete="username" />
+                <label for="username">Username</label>
+                <span class={focusBorder}></span>
+            </div>
+            <div class={wrapper}>
+                <input type="password" id="password" name="password" placeholder="Password" required autocomplete="current-password" />
+                <label for="password">Password</label>
+                <span class={focusBorder}></span>
+            </div>
+            <button type="submit" class={loginBtn}>Sign In</button>
+        </form>
+    </div>
 )
 
 export default Login
