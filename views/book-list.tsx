@@ -10,6 +10,7 @@ import CloseButton from './components/close-button.tsx'
 import Message from './components/message.tsx'
 
 export type AuthorGroup = {
+    id: number
     name: string
     series: Record<string, (BookType & { order: number })[]>
     standalone: BookType[]

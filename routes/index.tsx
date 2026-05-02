@@ -40,14 +40,20 @@ const NewBookRequestSchema = z.object({
     read: z.stringbool().default(false)
 }).refine((data) => !data.series || !!data.order, { message: 'Series order is required when book is part of a series', path: ['order'] })
 
-export type NewBookType = z.infer<typeof NewBookRequestSchema>;
+const EditBookRequestSchema = z.object({
+    owned: z.stringbool().default(false),
+    read: z.stringbool().default(false)
+})
+
+export type NewBookType = z.infer<typeof NewBookRequestSchema>
+export type UpdateBookType = z.infer<typeof EditBookRequestSchema> & { bookId: number }
 
 const groupByAuthor = (books: BookType[]): AuthorGroup[] => {
     const authorMap: Record<string, AuthorGroup> = {}
 
     for (const book of books) {
         for (const author of book.authors) {
-            if (!authorMap[author.id]) authorMap[author.id] = { name: author.name, series: {}, standalone: [] }
+            if (!authorMap[author.id]) authorMap[author.id] = { id: author.id, name: author.name, series: {}, standalone: [] }
             if (book.series?.length) {
                 book.series.map(s => {
                     if (s.primaryAuthorId === author.id) {
@@ -125,5 +131,24 @@ index.post('/books',
         return c.redirect('/')
     }
 )
+
+index.post('/book/:id', requireAuth, async (c) => {
+    const stuff = await c.req.formData()
+    const { success, data, error } = safeParse(EditBookRequestSchema, Object.fromEntries(stuff.entries()))
+    if (!success) {
+        console.log(error)
+        setFlash<MessageFlash>(c, { message: 'Någonting gick fel' })
+        return c.redirect('/')
+    }
+
+    const { userId } = c.get('user')
+    const bookId = parseInt(c.req.param('id'))
+    const result = await c.get('books').updateUserBook(userId, { bookId, ...data })
+    const book = await c.get('books').getBook(result.book_id)
+
+    setFlash<MessageFlash>(c, { message: `${book.title} sparades` })
+
+    return c.redirect('/')
+})
 
 export default index

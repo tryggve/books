@@ -1,5 +1,5 @@
 import pg from 'pg'
-import { NewBookType } from '../routes/index.tsx'
+import type { NewBookType, UpdateBookType } from '../routes/index.tsx'
 
 interface Book {
     id: number
@@ -73,6 +73,10 @@ const createBookRepository = (db: pg.Pool) => ({
     getBooks: async () => {
         const result = await db.query<Book>('SELECT * from books')
         return result.rows
+    },
+    getBook: async (id: number) => {
+        const result = await db.query<Book>('SELECT * from books where id = $1', [id])
+        return result.rows[0]
     },
     getAuthors: async () => {
         const result = await db.query<Author>('SELECT * from authors ORDER BY name ASC')
@@ -223,6 +227,10 @@ ORDER BY
         } finally {
             client.release()
         }
+    },
+    updateUserBook: async (userId: number, updateBookStuff: UpdateBookType) => {
+        const result = await db.query<UserBooks>(`UPDATE user_books SET (owned, read) = ($1, $2) WHERE user_id = $3 AND book_id = $4 RETURNING *`, [updateBookStuff.owned, updateBookStuff.read, userId, updateBookStuff.bookId])
+        return result.rows[0]
     }
 })
 
