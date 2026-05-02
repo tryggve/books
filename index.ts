@@ -5,6 +5,11 @@ import createDbClient from './lib/db-client.ts'
 
 const { WEBAPP_USER, WEBAPP_PASSWORD, POSTGRES_HOST, POSTGRES_DB, POSTGRES_PORT = '5432', PORT = '3000', JWT_SECRET } = process.env
 
+if (!JWT_SECRET) {
+  console.error('unable to load important stuff')
+  process.exit(1)
+}
+
 const pool = createDbClient({
   user: WEBAPP_USER,
   password: WEBAPP_PASSWORD,
@@ -13,7 +18,7 @@ const pool = createDbClient({
   database: POSTGRES_DB
 })
 
-const app = createApp({pgPool: pool, jwtSecret: JWT_SECRET!});
+const app = createApp({pgPool: pool, jwtSecret: JWT_SECRET});
 
 const server = serve({
   fetch: app.fetch,
