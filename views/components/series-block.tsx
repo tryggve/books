@@ -40,12 +40,10 @@ const seriesName = css`font-size: 13px; font-weight: 500; color: var(--color-tex
 const seriesCount = css`
     font-size: 11px;
     padding: 4px 8px;
-    border: 1px solid transparent;
     border-radius: 8px;
     color: var(--color-text-tertiary);
-    transition: border-color 200ms ease-in-out, background-color 300ms ease-in-out;
+    transition: background-color 300ms ease-in-out;
     &[data-filtered] {
-        border-color: var(--color-border-info);
         background-color: var(--color-background-info);
     }
 `
