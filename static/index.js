@@ -13,33 +13,64 @@ currentState = {
     read: undefined
 }
 
-function enableClicker(node) {
-    const buttonActiveClass = node.dataset.classActive;
-    const filterType = node.id.split('-').shift();
-    currentState[filterType] = node.dataset.state;
-    node.addEventListener('click', () => {
-        const nextState = (stateMachine[filterType].indexOf(node.dataset.state) + 1) % stateMachine[filterType].length
-        node.textContent = labelMaker[filterType][nextState]
-        currentState[filterType] = node.dataset.state = stateMachine[filterType][nextState]
-        if (nextState > 0) { node.dataset.active = true } else delete node.dataset.active
-        filterBooks()
+function enableClicker(filterNode, renderFunction) {
+    const filterType = filterNode.id.split('-').shift();
+    currentState[filterType] = filterNode.dataset.state;
+    filterNode.addEventListener('click', () => {
+        const nextState = (stateMachine[filterType].indexOf(filterNode.dataset.state) + 1) % stateMachine[filterType].length
+        filterNode.textContent = labelMaker[filterType][nextState]
+        currentState[filterType] = filterNode.dataset.state = stateMachine[filterType][nextState]
+        if (nextState > 0) { filterNode.dataset.active = true } else delete filterNode.dataset.active
+        renderFunction()
     })
 }
 
-function filterBooks() {
-    const bookNodes = document.querySelectorAll('[data-component="book-row"]')
-    bookNodes.forEach(book => {
-        const ownedMatch = currentState.owned === 'all'
-            || (currentState.owned === 'owned' && book.dataset.owned === 'true')
-            || (currentState.owned === 'not-owned' && book.dataset.owned === 'false')
-        const readMatch = currentState.read === 'all'
-            || (currentState.read === 'read' && book.dataset.read === 'true')
-            || (currentState.read === 'not-read' && book.dataset.read === 'false')
-
-        if (ownedMatch && readMatch) return book.style.display = 'flex';
-
-        return book.style.display = 'none'
+function render(authorNodes) {
+    authorNodes.forEach(authorNode => {
+        let visibleAuthorBooks = 0
+        const authorBookCountNode = authorNode.querySelector('[data-component="book-count"]')
+        const authorBookNodes = authorNode.querySelectorAll('[data-component="book-row"]')
+        const seriesNodes = authorNode.querySelectorAll('[data-component="series-block"]')
+        seriesNodes.forEach(seriesNode => {
+            let visibleSeriesBooks = 0
+            const seriesBookCountNode = seriesNode.querySelector('[data-component="book-count"]')
+            const bookNodes = seriesNode.querySelectorAll('[data-component="book-row"]')
+            bookNodes.forEach(bookNode => {
+                if (filterMatch(bookNode)) {
+                    bookNode.style.display = 'flex'
+                    visibleSeriesBooks += 1
+                } else {
+                    bookNode.style.display = 'none'
+                }
+            })
+            if (visibleSeriesBooks < bookNodes.length) {
+                seriesBookCountNode.innerText = `${visibleSeriesBooks} / ${bookNodes.length}`
+                seriesBookCountNode.dataset.filtered = true
+            } else {
+                seriesBookCountNode.innerText = `${visibleSeriesBooks} ${visibleSeriesBooks !== 1 ? 'böcker' : 'bok'}`
+                delete seriesBookCountNode.dataset.filtered
+            }
+            visibleAuthorBooks += visibleSeriesBooks
+        })
+        if (visibleAuthorBooks < authorBookNodes.length) {
+            authorBookCountNode.innerText = `${visibleAuthorBooks} / ${authorBookNodes.length}`
+            authorBookCountNode.dataset.filtered = true
+        } else {
+            authorBookCountNode.innerText = `${visibleAuthorBooks} ${visibleAuthorBooks !== 1 ? 'böcker' : 'bok'}`
+            delete authorBookCountNode.dataset.filtered
+        }
     })
+}
+
+function filterMatch(book) {
+    const ownedMatch = currentState.owned === 'all'
+        || (currentState.owned === 'owned' && book.dataset.owned === 'true')
+        || (currentState.owned === 'not-owned' && book.dataset.owned === 'false')
+    const readMatch = currentState.read === 'all'
+        || (currentState.read === 'read' && book.dataset.read === 'true')
+        || (currentState.read === 'not-read' && book.dataset.read === 'false')
+
+    return (ownedMatch && readMatch)
 }
 
 function enableSeriesFilter(newSeriesInput, bookAuthorSelector, seriesSelector, seriesOptions, seriesOrderInput) {
@@ -123,7 +154,7 @@ function hello() {
 
     bookForm.addEventListener('submit', () => setPageState(authorNodes, seriesNodes))
     editBookForm.forEach(node => node.addEventListener('submit', () => setPageState(authorNodes, seriesNodes)))
-    document.querySelectorAll('#owned-status, #read-status').forEach(enableClicker)
+    document.querySelectorAll('#owned-status, #read-status').forEach((filterNode) => enableClicker(filterNode, () => render(authorNodes)))
     enableSeriesFilter(newSeriesInput, bookAuthorSelector, seriesSelector, seriesOptions, seriesOrderInput)
     enableSeriesOrderEnabler(seriesOrderInput, newSeriesInput, seriesSelector, seriesOptions)
     enableObserver(sentinel, toolbar);

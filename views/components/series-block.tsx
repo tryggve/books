@@ -37,7 +37,18 @@ const seriesBlock = css`
     }
 `
 const seriesName = css`font-size: 13px; font-weight: 500; color: var(--color-text-secondary); flex: 1;`
-const seriesCount = css`font-size: 11px; color: var(--color-text-tertiary);`
+const seriesCount = css`
+    font-size: 11px;
+    padding: 4px 8px;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    color: var(--color-text-tertiary);
+    transition: border-color 200ms ease-in-out, background-color 300ms ease-in-out;
+    &[data-filtered] {
+        border-color: var(--color-border-info);
+        background-color: var(--color-background-info);
+    }
+`
 
 export const SeriesBlock: FC<PropsWithChildren<{ name: string, count: number, seriesId: string }>> = ({ name, count, children, seriesId }) => {
     if (count === 0) return null
@@ -45,7 +56,7 @@ export const SeriesBlock: FC<PropsWithChildren<{ name: string, count: number, se
         <details class={seriesBlock} open data-component='series-block' data-series-id={seriesId}>
             <summary class={seriesRow} data-component='series-row'>
                 <span class={seriesName}>{name}</span>
-                <span class={seriesCount}>{count} {count !== 1 ? 'böcker' : 'bok'}</span>
+                <span class={seriesCount} data-component='book-count'>{count} {count !== 1 ? 'böcker' : 'bok'}</span>
             </summary>
             {children}
         </details>

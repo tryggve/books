@@ -79,7 +79,15 @@ const authorName = css`
 `
 const authorCount = css`
     font-size: 11px;
+    padding: 4px 8px;
+    border: 1px solid transparent;
+    border-radius: 8px;
     color: var(--color-text-tertiary);
+    transition: border-color 200ms ease-in-out, background-color 300ms ease-in-out;
+    &[data-filtered] {
+        border-color: var(--color-border-info);
+        background-color: var(--color-background-info);
+    }
 `
 
 function initials(name: string) {
@@ -93,7 +101,7 @@ export const AuthorBlock: FC<PropsWithChildren<{authorId: number, name: string, 
             <summary class={authorRow}>
                 <span class={authorAvatar} data-av={av}>{initials(name)}</span>
                 <span class={authorName}>{name}</span>
-                <span class={authorCount}>{count} {count !== 1 ? 'böcker' : 'bok'}</span>
+                <span class={authorCount} data-component='book-count'>{count} {count !== 1 ? 'böcker' : 'bok'}</span>
             </summary>
             {children}
         </details>
