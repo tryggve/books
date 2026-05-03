@@ -21,7 +21,7 @@ function enableClicker(node) {
         const nextState = (stateMachine[filterType].indexOf(node.dataset.state) + 1) % stateMachine[filterType].length
         node.textContent = labelMaker[filterType][nextState]
         currentState[filterType] = node.dataset.state = stateMachine[filterType][nextState]
-        if (nextState > 0) { node.classList.add(buttonActiveClass) } else node.classList.remove(buttonActiveClass)
+        if (nextState > 0) { node.dataset.active = true } else delete node.dataset.active
         filterBooks()
     })
 }

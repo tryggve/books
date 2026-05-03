@@ -128,7 +128,7 @@ const Book: FC<{ book: SingleBookType, spineColor: number }> = ({book, spineColo
         ? <span class={badgeReadStyle}>Läst</span>
         : null
     const ownedBadge = book.owned
-        ? <span class={badgeOwnedStyle}>Äger</span>
+        ? <span class={badgeOwnedStyle}>Har</span>
         : null
     const numLabel = book.seriesOrder
         ? <div class={bookNumberStyle}>Del {book.seriesOrder}</div>
