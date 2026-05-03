@@ -91,6 +91,7 @@ const globalStyle = css`
 
 html {
     overscroll-behavior: none;
+    -webkit-tap-highlight-color: transparent;
 }
 `
 
