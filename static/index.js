@@ -74,13 +74,17 @@ function filterMatch(book) {
 }
 
 function enableSeriesFilter(newSeriesInput, bookAuthorSelector, seriesSelector, seriesOptions, seriesOrderInput) {
+    const emptySeries = seriesSelector.querySelector('option')
+    const allSeries = Array.from(seriesOptions)
     bookAuthorSelector.addEventListener('change', () => {
         seriesSelector.value = ''
+        seriesSelector.innerHTML = ''
         if (newSeriesInput.value === '') {
             seriesOrderInput.disabled = true
             seriesOrderInput.value = null
         }
-        seriesOptions.forEach(o => o.hidden = o.dataset.authorId !== bookAuthorSelector.value)
+        seriesSelector.appendChild(emptySeries)
+        allSeries.forEach(o => o.dataset.authorId === bookAuthorSelector.value && seriesSelector.appendChild(o))
     })
 
 }
