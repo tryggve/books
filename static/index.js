@@ -137,6 +137,14 @@ function killTheMessenger(message) {
     }, 3000)
 }
 
+function expandScroller(authorNodes, toolbar) {
+    const offset = toolbar.getBoundingClientRect().height
+    authorNodes.forEach(n => n.addEventListener('toggle', () => {
+        const top = n.getBoundingClientRect().top + window.scrollY - offset
+        n.open && window.scrollTo({top, behavior: 'smooth'})
+    }))
+}
+
 function hello() {
     const toolbar = document.querySelector('[data-component="toolbar"]')
     const sentinel = document.querySelector('[data-component="sentinel"]')
@@ -165,6 +173,7 @@ function hello() {
     enableSwitcharoo(newAuthorButton, newAuthorInput, bookAuthorSelector)
     enableSwitcharoo(newSeriesButton, newSeriesInput, seriesSelector)
     killTheMessenger(message)
+    expandScroller(authorNodes, toolbar)
 }
 
 function setPageState(authorNodes, seriesNodes) {
