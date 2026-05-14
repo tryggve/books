@@ -124,9 +124,10 @@ index.post('/books',
         }
 
         const { userId } = c.get('user')
-        await c.get('books').insertNewBookForUser(userId, data)
+        const greatSuccess = await c.get('books').insertNewBookForUser(userId, data)
 
-        setFlash<MessageFlash>(c, { message: `${data.title} sparades` })
+        const message = greatSuccess ? `${data.title} sparades` : 'Någonting gick fel'
+        setFlash<MessageFlash>(c, { message })
 
         return c.redirect('/')
     }

@@ -203,14 +203,14 @@ ORDER BY
             const bookId = bookRes.rows[0].id
 
             if (newBookStuff.newAuthor) {
-                const authorRes = await client.query<Author>('INSERT INTO authors (name) VALUES ($1)', [newBookStuff.newAuthor])
+                const authorRes = await client.query<Author>('INSERT INTO authors (name) VALUES ($1) RETURNING id', [newBookStuff.newAuthor])
                 newBookStuff.author = authorRes.rows[0].id
             }
 
             await client.query<BookAuthor>(`INSERT INTO book_authors (book_id, author_id) VALUES ($1, $2)`, [bookId, newBookStuff.author])
 
             if (newBookStuff.newSeries) {
-                const seriesRes = await client.query<Series>('INSERT INTO series (name, primary_author_id) VALUES ($1,$2)', [newBookStuff.newSeries, newBookStuff.author])
+                const seriesRes = await client.query<Series>('INSERT INTO series (name, primary_author_id) VALUES ($1,$2) RETURNING id', [newBookStuff.newSeries, newBookStuff.author])
                 newBookStuff.series = seriesRes.rows[0].id
             }
 
@@ -221,9 +221,11 @@ ORDER BY
             await client.query<UserBooks>(`INSERT INTO user_books (user_id, book_id, owned, read) VALUES ($1, $2, $3, $4)`, [userId, bookId, newBookStuff.owned, newBookStuff.read])
 
             await client.query('COMMIT')
+            return true
         } catch (e) {
             console.log(e)
             await client.query('ROLLBACK')
+            return false
         } finally {
             client.release()
         }
